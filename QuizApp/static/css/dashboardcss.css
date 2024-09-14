@@ -1,0 +1,152 @@
+/* styles.css */
+
+
+    body, html {
+        height: 100%;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        color: #ffffff;
+        background: url("{% static 'img/Design 3.png' %}") no-repeat center center fixed;
+        background-size: cover;
+        overflow: hidden;
+    }
+
+
+
+.navbar {
+    background-color: rgba(52, 58, 64, 0.8); /* Slightly transparent background */
+    z-index: 1000; /* Ensures navbar stays on top of the background image */
+    animation: fadeIn 2s ease-in-out; /* Fade-in animation for navbar */
+}
+
+.navbar-brand, .nav-link {
+    color: #ffffff !important;
+}
+
+.navbar-nav .nav-link.active {
+    background-color: rgba(52, 58, 64, 0.8); /* Background color for the active link */
+    color: #ffffff !important; /* Text color for the active link */
+    border-radius: 5px; /* Rounded corners */
+    padding: 8px 16px; /* Padding for the active link */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for background and text color */
+}
+
+.navbar-nav .nav-link:hover {
+    background-color: #0056b3; /* Darker background color on hover */
+    color: #ffffff !important; /* Ensure text color stays white */
+}
+
+.dashboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1;
+    position: relative;
+}
+
+.topic-card {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin: 10px;
+    width: 300px;
+    text-align: center;
+    position: relative;
+    animation: fadeInUp 1s ease-in-out;
+}
+
+.topic-card h2 {
+    color: #333;
+    font-size: 1.5rem; /* Adjust font size as needed */
+    white-space: nowrap; /* Prevent line breaks */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Add ellipsis for overflow text */
+}
+
+.level-buttons {
+    margin-top: 20px;
+}
+
+.level-buttons button {
+    background-color: #D9D9D9;
+    color: rgba(52, 58, 64, 0.8);
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    animation: bounceIn 4s ease-in-out;
+    display: block;
+    width: 100%;
+    text-align: left;
+    position: relative;
+}
+
+.level-buttons button:hover {
+    background-color: #242424;
+    color: #ffffff; /* Ensure text color stays white on hover */
+    animation: pulse 1s infinite;
+}
+
+.quiz-dropdown {
+    display: none;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin-top: 10px;
+    padding: 10px;
+    position: absolute;
+    width: 100%;
+    z-index: 100;
+    max-height: 300px; /* Limit height */
+    overflow-y: auto; /* Scroll if content overflows */
+}
+
+.quiz-dropdown .card {
+    margin-bottom: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.quiz-dropdown .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.quiz-dropdown .card-body {
+    padding: 15px;
+}
+
+.quiz-dropdown .card-title {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.quiz-dropdown .card-text {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}

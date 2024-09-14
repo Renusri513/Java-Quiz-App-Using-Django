@@ -1,0 +1,56 @@
+This project is a dynamic Java-based quiz application designed to provide a user-friendly platform for learning and testing Java programming skills. The application caters to both users and administrators with distinct functionalities.
+For users, the application offers various Java topics, each categorized into three levels: Beginner, Intermediate, and Advanced. Each level contains quizzes with a flexible number of questions. The questions allow either single or multiple correct answers, making the quizzes diverse and challenging. Users can participate in any quiz, any number of times, and can also view their scores for continuous learning and improvement.
+On the admin side, the system allows for dynamic management of quizzes. Administrators can create new quizzes, update existing ones, and view all quizzes through an easy-to-use interface.
+The project is built with a clean and intuitive UI, leveraging html, CSS, and JavaScript for the frontend, and Python,Django, and MySQL for the backend. The development was carried out in Visual Studio Code.
+This Java quiz app serves as an efficient educational tool for both learners and administrator, promoting interactive learning while offering comprehensive quiz management capabilities.
+
+For this Project:
+1.install python 
+2.install xaamp
+3.Start XAAMP
+4.Import javaquizapp.sql in MySQL 
+5. Open terminal inside the folder with code.
+6. Type pip install -r requirements.txt in the terminal window to install all the requirements to run the app.
+7.Then, make database migrations: 
+--python manage.py makemigrations
+-- python manage.py migrate
+8. Type python manage.py runserver to start a localhost server for the app.
+9. The API is started and now you can use the API routes to give requests.
+
+About Project:
+The Java Quiz App has two types of users: 'User' and 'Admin.'
+For User:
+1. The user opens the web application and sees a homepage that explains the website's 
+purpose.
+2. To take quizzes, the user must sign up by providing basic details.
+3. After signing up, the user is redirected to the login page.
+4. The user enters valid credentials on the login page to access the quiz list page.
+5. On the quiz list page, the user can filter quizzes by:
+• Topic name
+• Difficulty level
+• Quiz name
+6. The user can also access the dashboard, which displays all available topics for topicwise quiz selection.
+7. Upon starting a quiz, the user is presented with questions, each having a time limit set 
+by the admin.
+8. Questions may be:
+• Single-select
+• Multiple-select
+9. If the user selects the correct answer:
+• It is highlighted in green.
+10. If the user selects the wrong answer:
+• It is highlighted in red.
+11. After selecting an answer, the user presses the Next button before the time runs out.
+12. Upon completing all questions, the user receives:
+• A score
+• A percentage
+13. The user can:
+• Retake the quiz by clicking the Restart Quiz button.
+• Explore more quizzes by clicking the Explore More Quizzes button.
+4
+For Admin:
+1. The admin logs in to the website.
+2. After a successful login, the admin is redirected to the admin homepage.
+3. From the homepage, the admin can:
+• Insert a new topic.
+• Create a new quiz by opening the Create Quiz page.
+• Update an existing quiz by accessing the Update Quiz page.

@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Creation Form</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/createquiz.css' %}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Java Quiz App</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'adminhome' %}">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'create_quiz' %}">Create Quiz <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'view_quizzes' %}">View Quizzes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Create a Quiz</h1>
+        <form id="quizForm" method="POST" action="{% url 'insert_quiz' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="topic">Select Topic:</label>
+                <select id="topic" name="topic" class="form-control" required>
+                    <!-- Topics will be loaded dynamically -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="quizName">Quiz Name:</label>
+                <input type="text" id="quizName" name="quizName" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="difficulty">Select Difficulty:</label>
+                <select id="difficulty" name="difficulty" class="form-control" required>
+                    <option value="">Select difficulty</option>
+                    <option value="beginner">Easy</option>
+                    <option value="intermediate">Medium</option>
+                    <option value="advanced">Hard</option>
+                </select>
+            </div>
+            <div id="additionalFields" class="mt-4" style="display: none;">
+                <div id="questionsContainer"></div>
+                <div class="form-group mt-3">
+                    <button type="button" id="addQuestionButton" class="btn btn-secondary btn-block">Add Question</button>
+                </div>
+            </div>
+            <div class="form-group mt-4">
+                <button type="submit" class="btn btn-primary btn-block">Submit Quiz</button>
+            </div>
+        </form>
+        <div style="color: blue;">
+            {{status}}</div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Fetch topics from Django view
+        function fetchTopics() {
+            
+            fetch("{% url 'get_topics' %}")
+                .then(response => {
+                    if (!response.ok) {
+                        
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                   
+                })
+                .then(data => {
+                    
+                    let topicSelect = document.getElementById('topic');
+                    topicSelect.innerHTML = '<option value="">Select a topic</option>';
+                    data.forEach(topic => {
+                        let option = document.createElement('option');
+                        option.value = topic.id;
+                        option.textContent = topic.name;
+                        topicSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching topics:', error));
+        }
+
+        function toggleAdditionalFields() {
+            var topic = document.getElementById('topic').value;
+            var quizName = document.getElementById('quizName').value;
+            var difficulty = document.getElementById('difficulty').value;
+
+            if (topic && quizName && difficulty) {
+                document.getElementById('additionalFields').style.display = 'block';
+            } else {
+                document.getElementById('additionalFields').style.display = 'none';
+            }
+        }
+
+        function addQuestion() {
+    var questionsContainer = document.getElementById('questionsContainer');
+    var questionIndex = questionsContainer.querySelectorAll('.question-container').length;
+
+    var newQuestion = '' +
+        '<div class="question-container">' +
+            '<div class="form-group">' +
+                '<label>Question Type:</label>' +
+                '<select name="questions[' + questionIndex + '][questionType]" onchange="updateCorrectOptions(' + questionIndex + ')" required>' +
+                    '<option value="">Select question type</option>' +
+                    '<option value="single">Single Selection</option>' +
+                    '<option value="multiple">Multiple Selection</option>' +
+                '</select>' +
+            '</div>' +
+            '<div class="form-group">' +
+                '<label>Question:</label>' +
+                '<input type="text" name="questions[' + questionIndex + '][question]" required>' +
+            '</div>' +
+            '<div class="form-group">' +
+                '<label>Time (in seconds):</label>' +
+                '<input type="number" name="questions[' + questionIndex + '][time]" placeholder="Enter time in seconds" required>' +
+            '</div>' +
+            '<div class="form-group options">' +
+                '<label>Options:</label>' +
+                '<div id="optionsContainer' + questionIndex + '">' +
+                    '<div><input type="text" name="questions[' + questionIndex + '][options][]" placeholder="Option 1" required></div>' +
+                    '<button type="button" onclick="addOption(' + questionIndex + ')">Add More Options</button>' +
+                '</div>' +
+            '</div>' +
+            '<div class="form-group correct-options">' +
+                '<label>Correct Options:</label>' +
+                '<div id="correctOptionsContainer' + questionIndex + '"></div>' +
+            '</div>' +
+            '<button type="button" onclick="removeQuestion(' + questionIndex + ')">Remove Question</button>' +
+        '</div>';
+    questionsContainer.insertAdjacentHTML('beforeend', newQuestion);
+}
+
+
+        function addOption(questionIndex) {
+            var optionsContainer = document.getElementById('optionsContainer' + questionIndex);
+            var optionCount = optionsContainer.querySelectorAll('input[type="text"]').length + 1;
+            var newOption = '<div><input type="text" name="questions[' + questionIndex + '][options][]" placeholder="Option ' + optionCount + '" required></div>';
+            optionsContainer.insertAdjacentHTML('beforeend', newOption);
+            updateCorrectOptions(questionIndex);
+        }
+
+        function updateCorrectOptions(questionIndex) {
+            var questionType = document.querySelector('select[name="questions[' + questionIndex + '][questionType]"]').value;
+            var correctOptionsContainer = document.getElementById('correctOptionsContainer' + questionIndex);
+            correctOptionsContainer.innerHTML = '';
+
+            if (questionType) {
+                var options = document.querySelectorAll('#optionsContainer' + questionIndex + ' input[name="questions[' + questionIndex + '][options][]"]');
+                options.forEach(function(option, index) {
+                    var optionHTML = '<div><input type="' + (questionType === 'single' ? 'radio' : 'checkbox') + '" name="questions[' + questionIndex + '][correctOptions][]" value="' + option.value + '" required><label>' + option.value + '</label></div>';
+                    correctOptionsContainer.insertAdjacentHTML('beforeend', optionHTML);
+                });
+            }
+        }
+
+        function removeQuestion(questionIndex) {
+            var questionContainer = document.querySelector('#questionsContainer .question-container:nth-child(' + (questionIndex + 1) + ')');
+            if (questionContainer) {
+                questionContainer.remove();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchTopics();
+            document.getElementById('quizForm').addEventListener('change', toggleAdditionalFields);
+            document.getElementById('addQuestionButton').addEventListener('click', addQuestion);
+        });
+    </script>
+</body>
+</html>
